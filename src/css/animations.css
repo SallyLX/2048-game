@@ -1,0 +1,62 @@
+/* 2048 游戏 - 动画样式 */
+
+/* 方块出现动画 */
+@keyframes appear {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 方块合并动画 */
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 方块移动过渡 */
+.tile {
+    transition: transform 0.15s ease-in-out;
+}
+
+/* 新方块出现 */
+.tile-new {
+    animation: appear 0.2s ease-in-out;
+}
+
+/* 合并方块 */
+.tile-merged {
+    animation: pop 0.2s ease-in-out;
+}
+
+/* 得分增加动画 */
+@keyframes score-add {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
+
+.score-add {
+    position: absolute;
+    animation: score-add 0.6s ease-out forwards;
+    font-size: 18px;
+    font-weight: bold;
+    color: #776e65;
+    pointer-events: none;
+}

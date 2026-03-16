@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048 游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>2048</h1>
+            <div class="scores-container">
+                <div class="score-box">
+                    <span class="score-label">得分</span>
+                    <span id="score" class="score-value">0</span>
+                </div>
+                <div class="score-box">
+                    <span class="score-label">最高分</span>
+                    <span id="best-score" class="score-value">0</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="game-info">
+            <p>使用方向键移动方块，相同数字会合并！</p>
+            <div class="controls">
+                <select id="size-select" class="size-select">
+                    <option value="3">3x3 简单</option>
+                    <option value="4" selected>4x4 经典</option>
+                    <option value="5">5x5 困难</option>
+                </select>
+                <button id="undo-btn" class="btn-undo" title="撤销 (剩余 3 次)">
+                    ↩ 撤销 <span id="undo-count">(3)</span>
+                </button>
+                <button id="new-game-btn" class="btn-new-game">新游戏</button>
+                <button id="theme-btn" class="btn-theme">🌙 深夜模式</button>
+            </div>
+        </div>
+        
+        <div id="game-board" class="game-board">
+            <!-- 网格由 JavaScript 生成 -->
+        </div>
+        
+        <div id="game-over" class="game-over hidden">
+            <div class="game-over-content">
+                <h2>游戏结束!</h2>
+                <p>最终得分: <span id="final-score">0</span></p>
+                <button id="restart-btn" class="btn-new-game">再玩一次</button>
+            </div>
+        </div>
+        
+        <div id="new-record" class="new-record hidden" style="display: none;">
+            <div class="new-record-content">
+                <h2>🎉 新纪录!</h2>
+                <p>恭喜你获得了 <span id="record-score">0</span> 分!</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 排行榜按钮 -->
+    <button id="leaderboard-btn" class="btn-leaderboard">🏆 排行榜</button>
+    
+    <!-- 排行榜弹窗 -->
+    <div id="leaderboard-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>🏆 排行榜</h2>
+            <div id="leaderboard-list" class="leaderboard-list">
+                <!-- 排行榜内容由 JavaScript 生成 -->
+            </div>
+            <button id="close-leaderboard" class="btn-close">关闭</button>
+        </div>
+    </div>
+    
+    <script src="js/game.js"></script>
+</body>
+</html>

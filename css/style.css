@@ -1,0 +1,587 @@
+/* 2048 游戏样式 - v0.4.0 */
+
+/* CSS 变量 - 默认主题 */
+:root {
+    --bg-primary: #faf8ef;
+    --bg-secondary: #bbada0;
+    --bg-cell: rgba(238, 228, 218, 0.35);
+    --text-primary: #776e65;
+    --text-light: #f9f6f2;
+    --btn-bg: #8f7a66;
+    --btn-hover: #9f8b77;
+    --score-bg: #bbada0;
+    --score-label: #eee4da;
+    --tile-2: #eee4da;
+    --tile-4: #ede0c8;
+    --tile-8: #f2b179;
+    --tile-16: #f59563;
+    --tile-32: #f67c5f;
+    --tile-64: #f65e3b;
+    --tile-128: #edcf72;
+    --tile-256: #edcc61;
+    --tile-512: #edc850;
+    --tile-1024: #edc53f;
+    --tile-2048: #edc22e;
+    --game-over-bg: rgba(238, 228, 218, 0.73);
+    --modal-bg: rgba(0, 0, 0, 0.5);
+    --modal-content-bg: white;
+    --leaderboard-item-bg: #faf8ef;
+    --new-record-bg: white;
+}
+
+/* 深夜模式 - 绿色主题 */
+body.dark-mode {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-cell: rgba(22, 33, 62, 0.5);
+    --text-primary: #e8e8e8;
+    --text-light: #e8e8e8;
+    --btn-bg: #2d8b6e;
+    --btn-hover: #3db88a;
+    --score-bg: #16213e;
+    --score-label: #4ee0a0;
+    --tile-2: #0f3460;
+    --tile-4: #1a5f4a;
+    --tile-8: #2d8b6e;
+    --tile-16: #3db88a;
+    --tile-32: #4ee0a0;
+    --tile-64: #5ff0b0;
+    --tile-128: #2d8b6e;
+    --tile-256: #3db88a;
+    --tile-512: #4ee0a0;
+    --tile-1024: #5ff0b0;
+    --tile-2048: #70ffb8;
+    --game-over-bg: rgba(26, 26, 46, 0.85);
+    --modal-bg: rgba(0, 0, 0, 0.7);
+    --modal-content-bg: #16213e;
+    --leaderboard-item-bg: #0f3460;
+    --new-record-bg: #16213e;
+}
+
+/* 基础重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: background 0.3s ease;
+}
+
+/* 游戏容器 */
+.game-container {
+    max-width: 500px;
+    width: 100%;
+}
+
+/* 头部 */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.game-header h1 {
+    font-size: 60px;
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+}
+
+/* 得分容器 */
+.scores-container {
+    display: flex;
+    gap: 10px;
+}
+
+.score-box {
+    background: var(--score-bg);
+    padding: 10px 25px;
+    border-radius: 6px;
+    text-align: center;
+    min-width: 80px;
+    transition: background 0.3s ease;
+}
+
+.score-label {
+    display: block;
+    font-size: 13px;
+    color: var(--score-label);
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.score-value {
+    display: block;
+    font-size: 25px;
+    font-weight: 700;
+    color: white;
+}
+
+/* 游戏信息 */
+.game-info {
+    margin-bottom: 20px;
+}
+
+.game-info p {
+    color: var(--text-primary);
+    font-size: 14px;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+/* 控制按钮 */
+.controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.size-select {
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.size-select option {
+    background: var(--btn-bg);
+}
+
+.btn-new-game, .btn-undo {
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.15s ease;
+}
+
+.btn-new-game:hover, .btn-undo:hover {
+    background: var(--btn-hover);
+}
+
+.btn-undo:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* 游戏网格 */
+.game-board {
+    background: var(--bg-secondary);
+    border-radius: 6px;
+    padding: 15px;
+    position: relative;
+    transition: background 0.3s ease;
+}
+
+.grid-container {
+    display: grid;
+    gap: 15px;
+}
+
+.grid-cell {
+    background: var(--bg-cell);
+    border-radius: 6px;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+/* 方块样式 */
+.tile {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    border-radius: 6px;
+    transition: transform 150ms ease-in-out, left 150ms ease-in-out, top 150ms ease-in-out;
+}
+
+.tile-new {
+    animation: appear 0.2s ease-in-out;
+}
+
+.tile-merged {
+    animation: pop 0.2s ease-in-out;
+}
+
+@keyframes appear {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 方块颜色 - 使用 CSS 变量 */
+.tile-2 {
+    background: var(--tile-2);
+    color: var(--text-primary);
+}
+
+.tile-4 {
+    background: var(--tile-4);
+    color: var(--text-primary);
+}
+
+.tile-8 {
+    background: var(--tile-8);
+    color: var(--text-light);
+}
+
+.tile-16 {
+    background: var(--tile-16);
+    color: var(--text-light);
+}
+
+.tile-32 {
+    background: var(--tile-32);
+    color: var(--text-light);
+}
+
+.tile-64 {
+    background: var(--tile-64);
+    color: var(--text-light);
+}
+
+.tile-128 {
+    background: var(--tile-128);
+    color: var(--text-light);
+}
+
+.tile-256 {
+    background: var(--tile-256);
+    color: var(--text-light);
+}
+
+.tile-512 {
+    background: var(--tile-512);
+    color: var(--text-light);
+}
+
+.tile-1024 {
+    background: var(--tile-1024);
+    color: var(--text-light);
+}
+
+.tile-2048 {
+    background: var(--tile-2048);
+    color: var(--text-light);
+}
+
+/* 超大数字 */
+.tile-super {
+    font-size: 30px !important;
+}
+
+/* 游戏结束遮罩 */
+.game-over {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--game-over-bg);
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: background 0.3s ease;
+}
+
+.game-over.hidden {
+    display: none;
+}
+
+.game-over-content {
+    text-align: center;
+}
+
+.game-over-content h2 {
+    font-size: 40px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+.game-over-content p {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+/* 新纪录提示 */
+.new-record {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--new-record-bg);
+    padding: 30px 50px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    z-index: 200;
+    animation: bounceIn 0.5s ease-out;
+    transition: background 0.3s ease;
+}
+
+.new-record.hidden {
+    display: none;
+}
+
+.new-record-content h2 {
+    font-size: 32px;
+    color: var(--tile-16);
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+.new-record-content p {
+    font-size: 20px;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+}
+
+@keyframes bounceIn {
+    0% { transform: translate(-50%, -50%) scale(0); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* 排行榜按钮 */
+.btn-leaderboard {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #f59563;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s, background 0.3s;
+}
+
+.btn-leaderboard:hover {
+    background: #f67c5f;
+    transform: scale(1.05);
+}
+
+/* 模态框 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--modal-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+    transition: background 0.3s ease;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--modal-content-bg);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    transition: background 0.3s ease;
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+.btn-close {
+    display: block;
+    width: 100%;
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease;
+}
+
+.btn-close:hover {
+    background: var(--btn-hover);
+}
+
+/* 排行榜列表 */
+.leaderboard-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: var(--leaderboard-item-bg);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: background 0.3s ease;
+}
+
+.leaderboard-item:nth-child(1) {
+    background: #ffd700;
+    color: #776e65;
+}
+
+.leaderboard-item:nth-child(2) {
+    background: #c0c0c0;
+    color: #776e65;
+}
+
+.leaderboard-item:nth-child(3) {
+    background: #cd7f32;
+    color: white;
+}
+
+.leaderboard-rank {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.leaderboard-score {
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.leaderboard-info {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-primary);
+    opacity: 0.7;
+    transition: color 0.3s ease;
+}
+
+.leaderboard-empty {
+    text-align: center;
+    color: var(--text-primary);
+    padding: 40px;
+    transition: color 0.3s ease;
+}
+
+/* 响应式设计 */
+@media (max-width: 520px) {
+    .game-header h1 {
+        font-size: 40px;
+    }
+    
+    .score-box {
+        padding: 8px 15px;
+        min-width: 60px;
+    }
+    
+    .score-label {
+        font-size: 11px;
+    }
+    
+    .score-value {
+        font-size: 18px;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .size-select, .btn-new-game, .btn-undo {
+        width: 100%;
+    }
+    
+    .grid-container {
+        gap: 10px;
+    }
+    
+    .btn-leaderboard {
+        bottom: 10px;
+        right: 10px;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* 主题切换按钮 */
+.btn-theme {
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-theme:hover {
+    background: var(--btn-hover);
+}
+
+.btn-theme:active {
+    transform: scale(0.95);
+}
